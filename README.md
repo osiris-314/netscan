@@ -1,4 +1,4 @@
-COMPREHENSIVE NETWORK SCANNER
+# COMPREHENSIVE NETWORK SCANNER
 
 usage: python netscan.py (to scan the whole network)
 
