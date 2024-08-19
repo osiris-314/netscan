@@ -6,7 +6,7 @@ usage: python netscan.py xx.xx.xx.xx (to only scan specific ip)
 
 usage: python netscan.py -f ip_file.txt (to scan all ips in the txt file)
 
-example for specific ip:
+## Example for specific ip:
 
 
 
