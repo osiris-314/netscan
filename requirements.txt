@@ -1,0 +1,6 @@
+scapy
+nmap
+colorama
+requests
+simpleaudio
+numpy
