@@ -67,7 +67,14 @@ def scan_network(network):
     return list(combined_ips.values())
 
 def perform_scans(ip):
-    play_tone(duration=0.1)
+    global args  # Declare args as global to access it within this function
+    
+    # Debug: Check if sound should be played
+    #print(f"Debug: Sound argument is {'enabled' if args.sound else 'disabled'}")
+    
+    if args.sound:
+        play_tone(duration=0.1)
+        
     scan_results = {
         'traceroute': [],
         'tcp_ports': [],
@@ -152,14 +159,15 @@ def perform_scans(ip):
         print_scan_results(ip, partial_results, 0)
         return partial_results, 0
 
-
 def print_scan_results(ip, scan_results, total_time):
     hostname = resolve_hostname(ip)
     print(Fore.LIGHTGREEN_EX + '+' * 40 + Fore.LIGHTBLUE_EX)
     if hostname == 'Unknown Hostname':
         print(Fore.LIGHTBLUE_EX + 'Results for ' + Fore.YELLOW + str(ip) + Fore.RED + ' (' + str(hostname) + ') ' + Fore.LIGHTBLUE_EX + ' (' + Fore.MAGENTA + f'{total_time:.2f}s' + Fore.LIGHTBLUE_EX + ')' + Fore.RESET)
     else:
-        print(Fore.LIGHTBLUE_EX + 'Results for ' + Fore.YELLOW + str(ip) + Fore.LIGHTGREEN_EX + ' (' + str(hostname) + ')' + Fore.LIGHTBLUE_EX)
+        print(Fore.LIGHTBLUE_EX + 'Results for ' + Fore.YELLOW + str(ip) + Fore.LIGHTGREEN_EX
+
+ + ' (' + str(hostname) + ') ' + Fore.LIGHTBLUE_EX + ' (' + Fore.MAGENTA + f'{total_time:.2f}s' + Fore.LIGHTBLUE_EX + ')' + Fore.RESET)
     
     # Traceroute
     print(Fore.CYAN + '-Traceroute:' + Fore.LIGHTBLUE_EX)
@@ -167,8 +175,8 @@ def print_scan_results(ip, scan_results, total_time):
         for hop in scan_results['traceroute']:
             print(Fore.YELLOW + str(hop) + Fore.LIGHTBLUE_EX)
     else:
-        print(Fore.LIGHTRED_EX + 'No traceroute information found.' + Fore.LIGHTBLUE_EX)
-    
+        print(Fore.LIGHTRED_EX + 'No Traceroute information found.' + Fore.LIGHTBLUE_EX)
+
     # TCP Ports
     print(Fore.CYAN + '-TCP Ports:' + Fore.LIGHTBLUE_EX)
     for port_info in scan_results['tcp_ports']:
@@ -288,7 +296,8 @@ def main():
     ff_time = finish1_start_time - final_start_time
 
     print(Fore.WHITE + Back.MAGENTA + 'Scan Complete...' + Back.RESET + Fore.LIGHTBLUE_EX + f' ({ff_time:.2f}s)')
-    play_tone(duration=0.4)
+    if args.sound:
+        play_tone(duration=0.4)
 
 if __name__ == "__main__":
     main()
