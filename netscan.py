@@ -8,19 +8,10 @@ import sys
 import argparse
 import requests
 from os import system
-import simpleaudio as sa
-import numpy as np
 import time
 
 system('clear')
 final_start_time = time.time()
-
-def play_tone(frequency=440, duration=0.1, sample_rate=44100):
-    t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
-    samples = 0.5 * np.sin(2 * np.pi * frequency * t)
-    samples = (samples * 32767).astype(np.int16)
-    audio = sa.play_buffer(samples, 1, 2, sample_rate)
-    audio.wait_done()
 
 def get_mac_vendor(mac_address):
     mac_address = mac_address.upper().replace(":", "").replace("-", "")
@@ -67,14 +58,6 @@ def scan_network(network):
     return list(combined_ips.values())
 
 def perform_scans(ip):
-    global args  # Declare args as global to access it within this function
-    
-    # Debug: Check if sound should be played
-    #print(f"Debug: Sound argument is {'enabled' if args.sound else 'disabled'}")
-    
-    if args.sound:
-        play_tone(duration=0.1)
-        
     scan_results = {
         'traceroute': [],
         'tcp_ports': [],
@@ -159,15 +142,14 @@ def perform_scans(ip):
         print_scan_results(ip, partial_results, 0)
         return partial_results, 0
 
+
 def print_scan_results(ip, scan_results, total_time):
     hostname = resolve_hostname(ip)
     print(Fore.LIGHTGREEN_EX + '+' * 40 + Fore.LIGHTBLUE_EX)
     if hostname == 'Unknown Hostname':
         print(Fore.LIGHTBLUE_EX + 'Results for ' + Fore.YELLOW + str(ip) + Fore.RED + ' (' + str(hostname) + ') ' + Fore.LIGHTBLUE_EX + ' (' + Fore.MAGENTA + f'{total_time:.2f}s' + Fore.LIGHTBLUE_EX + ')' + Fore.RESET)
     else:
-        print(Fore.LIGHTBLUE_EX + 'Results for ' + Fore.YELLOW + str(ip) + Fore.LIGHTGREEN_EX
-
- + ' (' + str(hostname) + ') ' + Fore.LIGHTBLUE_EX + ' (' + Fore.MAGENTA + f'{total_time:.2f}s' + Fore.LIGHTBLUE_EX + ')' + Fore.RESET)
+        print(Fore.LIGHTBLUE_EX + 'Results for ' + Fore.YELLOW + str(ip) + Fore.LIGHTGREEN_EX + ' (' + str(hostname) + ')' + Fore.LIGHTBLUE_EX)
     
     # Traceroute
     print(Fore.CYAN + '-Traceroute:' + Fore.LIGHTBLUE_EX)
@@ -175,15 +157,17 @@ def print_scan_results(ip, scan_results, total_time):
         for hop in scan_results['traceroute']:
             print(Fore.YELLOW + str(hop) + Fore.LIGHTBLUE_EX)
     else:
-        print(Fore.LIGHTRED_EX + 'No Traceroute information found.' + Fore.LIGHTBLUE_EX)
-
+        print(Fore.LIGHTRED_EX + 'No traceroute information found.' + Fore.LIGHTBLUE_EX)
+    
     # TCP Ports
     print(Fore.CYAN + '-TCP Ports:' + Fore.LIGHTBLUE_EX)
     for port_info in scan_results['tcp_ports']:
         status_label = "open" if port_info['state'] == "open" else "filtered"
         service_info = f'{port_info["service"]} ({port_info["version"]})' if port_info["service"] and port_info["version"] else ''
         if port_info['state'] == "open":
-            print(Fore.YELLOW + str(port_info['port']) + ' ' + Fore.LIGHTGREEN_EX + f'({status_label})' + ' ' + Fore.MAGENTA + str(port_info['reason']) + Fore.LIGHTBLUE_EX)
+            print(Fore.YELLOW
+
+ + str(port_info['port']) + ' ' + Fore.LIGHTGREEN_EX + f'({status_label})' + ' ' + Fore.MAGENTA + str(port_info['reason']) + Fore.LIGHTBLUE_EX)
         else:
             print(Fore.YELLOW + str(port_info['port']) + ' ' + Fore.LIGHTYELLOW_EX + f'({status_label})' + ' ' + Fore.MAGENTA + str(port_info['reason']) + Fore.LIGHTBLUE_EX)
     
@@ -230,7 +214,6 @@ def main():
     parser = argparse.ArgumentParser(description='Network Scanner Script')
     parser.add_argument('target', nargs='?', help='Target IP address, network, or website (e.g., 192.168.1.4, 192.168.1.0/24, or example.com)')
     parser.add_argument('-f', '--file', type=str, help='File containing IP addresses to scan')
-    parser.add_argument('-sound', action='store_true', help='Play sounds during execution')
     
     args = parser.parse_args()
 
@@ -296,8 +279,8 @@ def main():
     ff_time = finish1_start_time - final_start_time
 
     print(Fore.WHITE + Back.MAGENTA + 'Scan Complete...' + Back.RESET + Fore.LIGHTBLUE_EX + f' ({ff_time:.2f}s)')
-    if args.sound:
-        play_tone(duration=0.4)
+    # Removed sound play at the end
+    # play_tone(duration=0.4)
 
 if __name__ == "__main__":
     main()
