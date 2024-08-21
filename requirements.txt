@@ -1,5 +1,5 @@
 scapy
-nmap
+python-nmap
 colorama
 requests
 simpleaudio
