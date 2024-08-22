@@ -1,11 +1,16 @@
 # COMPREHENSIVE NETWORK SCANNER
-
-usage: python netscan.py (to scan the whole network)
-
-usage: python netscan.py xx.xx.xx.xx (to only scan specific ip)
-
-usage: python netscan.py -f ip_file.txt (to scan all ips in the txt file)
-
+To scan the whole network
+```
+python netscan.py
+```
+To only scan specific ip
+```
+python netscan.py xx.xx.xx.xx
+```
+To scan all ips in a txt file
+```
+python netscan.py -f ip_file_here.txt
+```
 ## Example for specific ip:
 
 
